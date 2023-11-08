@@ -132,6 +132,28 @@ li:hover {
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
 }
+/* Début de ma participation au CSS */
+#filtres {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 10px;
+	margin-bottom: 30px;
+}
+#filtres button {
+	font-family: 'Syne';
+	padding: 10px 15px;
+	color: #1D6154;
+	background-color: transparent;
+	border: 1px solid #1D6154;
+	border-radius: 30px;
+	cursor: pointer;
+	transition: all 0.3s ease-out;
+}
+#filtres button:hover {
+	background-color: #1D6154;
+	color: white;
+}
 
 .gallery img {
 	width: 100%;

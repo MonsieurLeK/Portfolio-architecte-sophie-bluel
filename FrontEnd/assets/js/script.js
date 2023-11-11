@@ -12,6 +12,7 @@ async function getWorks() {
        let figure = document.createElement("figure")
        let image = document.createElement("img")
        let figcaption = document.createElement("figcaption")
+       figure.classList.add(`categorie-${works[i].categoryId}`)
        figure.appendChild(image)
        figure.appendChild(figcaption)
         gallerie.appendChild(figure)
@@ -25,8 +26,15 @@ async function getCategories() {
     console.log(categories)
     for (let i = 0; i < categories.length; i++) {
         let button = document.createElement("button")
+        button.classList.add(`filtre-${categories[i].id}`)
         button.innerText = categories[i].name
         filtres.appendChild(button)
      }
+     let buttonList = document.querySelectorAll("#filtres button")
+     return buttonList
 }
-getCategories()
+const buttonNodeList =  getCategories()
+.then(res => console.log(res))
+
+
+

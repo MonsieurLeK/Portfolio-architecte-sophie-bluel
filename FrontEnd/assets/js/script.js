@@ -1,40 +1,123 @@
-//Récupération de la gallerie
-const gallerie = document.getElementById("gallerie")
-//Récupération de la div #filtres
-const filtres = document.getElementById("filtres")
-
-//Appel de l'API
-async function getWorks() {
-    let works = await (await fetch("http://localhost:5678/api/works")).json()
+//récupérer les containers dans le HTML
+const workContainer = document.getElementById("gallerie")
+const buttonContainer = document.getElementById("filtres")
+const modalImages = document.getElementById("modal__image-container")
+async function getElements() {
+    //récupération des travaux de l'architecte
+    let works
+    let buttons
+    const workData = await fetch('http://localhost:5678/api/works')
+    const buttonData = await fetch('http://localhost:5678/api/categories')
+    //mets les données dans la variable/objet "works"
+    works = await workData.json()
     console.log(works)
-//pour chaque élément de works, on créé l'élément HTML correspondant.
-    for (let i = 0; i < works.length; i++) {
-       let figure = document.createElement("figure")
-       let image = document.createElement("img")
-       let figcaption = document.createElement("figcaption")
-       figure.classList.add(`categorie-${works[i].categoryId}`)
-       figure.appendChild(image)
-       figure.appendChild(figcaption)
-        gallerie.appendChild(figure)
-        image.src = works[i].imageUrl
-        figcaption.innerText = works[i].title
-    }
-}
-getWorks()
-async function getCategories() {
-    let categories = await (await fetch("http://localhost:5678/api/categories")).json()
-    console.log(categories)
-    for (let i = 0; i < categories.length; i++) {
+    //création des différents éléments liés aux travaux
+    works.forEach(element => {
+       let workFigure = document.createElement("figure")
+       let workImage = document.createElement("img")
+       let workTag = document.createElement("figcaption")
+       let modalImageContainer = document.createElement("div")
+       let modalImage = document.createElement("img")
+       let deleteButton = document.createElement("a")
+       let deleteButtonSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="9" height="11" viewBox="0 0 9 11" fill="none">
+       <path d="M2.71607 0.35558C2.82455 0.136607 3.04754 0 3.29063 0H5.70938C5.95246 0 6.17545 0.136607 6.28393 0.35558L6.42857 0.642857H8.35714C8.71272 0.642857 9 0.930134 9 1.28571C9 1.64129 8.71272 1.92857 8.35714 1.92857H0.642857C0.287277 1.92857 0 1.64129 0 1.28571C0 0.930134 0.287277 0.642857 0.642857 0.642857H2.57143L2.71607 0.35558ZM0.642857 2.57143H8.35714V9C8.35714 9.70915 7.78058 10.2857 7.07143 10.2857H1.92857C1.21942 10.2857 0.642857 9.70915 0.642857 9V2.57143ZM2.57143 3.85714C2.39464 3.85714 2.25 4.00179 2.25 4.17857V8.67857C2.25 8.85536 2.39464 9 2.57143 9C2.74821 9 2.89286 8.85536 2.89286 8.67857V4.17857C2.89286 4.00179 2.74821 3.85714 2.57143 3.85714ZM4.5 3.85714C4.32321 3.85714 4.17857 4.00179 4.17857 4.17857V8.67857C4.17857 8.85536 4.32321 9 4.5 9C4.67679 9 4.82143 8.85536 4.82143 8.67857V4.17857C4.82143 4.00179 4.67679 3.85714 4.5 3.85714ZM6.42857 3.85714C6.25179 3.85714 6.10714 4.00179 6.10714 4.17857V8.67857C6.10714 8.85536 6.25179 9 6.42857 9C6.60536 9 6.75 8.85536 6.75 8.67857V4.17857C6.75 4.00179 6.60536 3.85714 6.42857 3.85714Z" fill="white"/>
+       </svg>`
+       //ici les éléments de la page d'accueil
+       workFigure.classList.add(`categorie-${element.categoryId}`)
+       workImage.src = element.imageUrl
+       workTag.innerText = element.title
+       //ici les éléments de la modale
+       modalImage.id = element.id
+       modalImage.src = element.imageUrl
+       modalImageContainer.classList.add("modal__image-wrapper")
+       deleteButton.innerHTML = deleteButtonSVG
+       deleteButton.classList.add("modal__delete-button")
+
+       //ici on place les éléments dans leurs containers
+       workContainer.appendChild(workFigure)
+       modalImageContainer.appendChild(modalImage)
+       modalImageContainer.appendChild(deleteButton)
+       modalImages.appendChild(modalImageContainer)
+       workFigure.appendChild(workImage)
+       workFigure.appendChild(workTag)
+    });
+    //mets les données dans la variable/objet "buttons"
+    buttons = await buttonData.json()
+    console.log(buttons)
+    //récupération de la gallerie
+    let workFilter = document.querySelectorAll("#gallerie figure")
+    //création du filtre "tous"
+    let filterAll = document.createElement("button")
+    filterAll.innerText = "Tous"
+    filterAll.classList.add("button-highlight")
+    filterAll.addEventListener("click", () => {
+        workFilter.forEach(element => {
+            let removeHighlight = document.querySelectorAll("#filtres button")
+            removeHighlight.forEach(element => {
+                if(element.classList.contains("button-highlight")) {
+                    element.classList.remove("button-highlight")
+                }
+            })
+            filterAll.classList.add("button-highlight")
+            element.classList.remove("display-none")
+        })
+    })
+    buttonContainer.appendChild(filterAll)
+    //création des autres boutons et eventlisteners
+    buttons.forEach(element => {
         let button = document.createElement("button")
-        button.classList.add(`filtre-${categories[i].id}`)
-        button.innerText = categories[i].name
-        filtres.appendChild(button)
-     }
-     let buttonList = document.querySelectorAll("#filtres button")
-     return buttonList
+        button.innerText = element.name
+        button.classList.add(`categorie-${element.id}`)
+        button.addEventListener("click", () => {
+            let buttonFilter = button.className
+            let removeHighlight = document.querySelectorAll("#filtres button")
+            removeHighlight.forEach(element => {
+                if(element.classList.contains("button-highlight")) {
+                    element.classList.remove("button-highlight")
+                }
+            })
+            button.classList.add("button-highlight")
+            console.log(workFilter)
+            console.log(buttonFilter)
+            workFilter.forEach(element => {
+                element.classList.remove("display-none")
+            })
+            workFilter.forEach(element => {
+                if (element.className == buttonFilter) {
+                    console.log(element)
+                } else {
+                    element.classList.add("display-none")
+                }
+            })
+        })
+        buttonContainer.appendChild(button)
+    });
 }
-const buttonNodeList =  getCategories()
-.then(res => console.log(res))
+getElements()
 
-
-
+//Vérification de si l'utilisateur est connecté ou non
+let isUserConnected = localStorage.getItem("connected")
+console.log(`connected = ${isUserConnected}`)
+if (isUserConnected == "true") {
+    let loginButton = document.getElementById("login-button")
+    loginButton.innerText = "Logout"
+    loginButton.href = "#"
+    loginButton.addEventListener("click", () => {
+        localStorage.removeItem("connected")
+        location.reload()
+    })
+    //on fait apparaît le bouton déclencheur de la modale
+    let modalButtonContainer = document.querySelector(".modal-button")
+    let modalButton = document.querySelector(".modal-button__link")
+    let modal = document.querySelector(".modal-container")
+    modalButtonContainer.style.display ="inline-block"
+    modalButton.addEventListener("click", (event) => {
+        modal.style.visibility = "visible"
+        event.preventDefault()
+        let modalTriggers = document.getElementById("modal-trigger")
+        console.log(modalTriggers)
+        modalTriggers.addEventListener("click", () => {
+            modal.style.display = "hidden"
+        })
+    })
+}

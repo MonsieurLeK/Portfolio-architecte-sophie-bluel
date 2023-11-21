@@ -114,10 +114,23 @@ if (isUserConnected == "true") {
     modalButton.addEventListener("click", (event) => {
         modal.style.visibility = "visible"
         event.preventDefault()
-        let modalTriggers = document.getElementById("modal-trigger")
+        let modalTriggers = document.querySelectorAll(".modal-trigger")
         console.log(modalTriggers)
-        modalTriggers.addEventListener("click", () => {
-            modal.style.display = "hidden"
+        modalTriggers.forEach((element) => {
+            element.addEventListener("click", () => {
+                modal.style.visibility = "hidden"
+            })
         })
     })
 }
+//On fait en sorte que les boutons de la modale soient fonctionnels
+let addPicButton = document.querySelector(".modal__addpic-button")
+let modalPicsSection = document.getElementById("modal__pics-section")
+let modalBackArrow = document.querySelector(".modal__arrow-back")
+addPicButton.addEventListener("click", () => {
+    modalPicsSection.classList.add("modal-move-left")
+})
+modalBackArrow.addEventListener("click", (event) => {
+    modalPicsSection.classList.remove("modal-move-left")
+    event.preventDefault()
+})

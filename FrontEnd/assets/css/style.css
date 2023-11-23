@@ -441,7 +441,6 @@ align-items: flex-start;
 }
 .form-add-work input, .form-add-work select {
 	appearance: none;
-	outline: none;
 	position: relative;
 	width: 100%;
 	padding: 15px;

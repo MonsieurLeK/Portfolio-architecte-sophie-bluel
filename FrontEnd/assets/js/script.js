@@ -27,11 +27,11 @@ async function getElements() {
        workImage.src = element.imageUrl
        workTag.innerText = element.title
        //ici les éléments de la modale
-       modalImage.id = element.id
        modalImage.src = element.imageUrl
        modalImageContainer.classList.add("modal__image-wrapper")
        deleteButton.innerHTML = deleteButtonSVG
        deleteButton.classList.add("modal__delete-button")
+       deleteButton.id = element.id
 
        //ici on place les éléments dans leurs containers
        workContainer.appendChild(workFigure)
@@ -117,8 +117,9 @@ if (isUserConnected == "true") {
         let modalTriggers = document.querySelectorAll(".modal-trigger")
         console.log(modalTriggers)
         modalTriggers.forEach((element) => {
-            element.addEventListener("click", () => {
+            element.addEventListener("click", (event) => {
                 modal.style.visibility = "hidden"
+                event.preventDefault()
             })
         })
     })
@@ -134,3 +135,35 @@ modalBackArrow.addEventListener("click", (event) => {
     modalPicsSection.classList.remove("modal-move-left")
     event.preventDefault()
 })
+//On fait apparait une prévisualisation de l'image sélectionnée
+let uploadButton = document.getElementById("choose-pic")
+let uploadLabel = document.querySelector(".input-file-label")
+let textPic = document.querySelector(".text-pic")
+let chosenPic = document.getElementById("chosen-pic")
+let svgPic = document.querySelector(".form-pic-section svg")
+
+uploadButton.onchange = () => {
+    let reader = new FileReader()
+    reader.readAsDataURL(uploadButton.files[0])
+    console.log(uploadButton.files[0])
+    reader.onload = () => {
+        svgPic.remove()
+        uploadLabel.remove()
+        textPic.remove()
+        chosenPic.setAttribute("src", reader.result)
+    }
+}
+//Récupérer les infos du formulaire et fetch POST
+const workForm = document.querySelector(".form-add-work")
+let workTitle = document.getElementById("work-title")
+let workCategory = document.getElementById("choix-categorie")
+let workSubmitButton = document.getElementById("addwork-submit-button")
+
+workForm.oninput = () => {
+    if (workTitle.value && workCategory.value != 0 && uploadButton.files[0]) {
+        workSubmitButton.disabled = false
+    } else {
+        workSubmitButton.disabled = true
+    }
+}
+ 

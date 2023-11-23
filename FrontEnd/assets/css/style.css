@@ -243,6 +243,10 @@ li:hover {
 	font-weight: 100;
 	font-size: 18px;
 }
+.modal-button__link:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
 
 .modal-container {
 	visibility: hidden;
@@ -274,6 +278,7 @@ li:hover {
 	width: 600px;
 	background: white;
 	border-radius: 10px;
+	overflow: hidden;
 }
 #modal h2 {
 	font-family: 'Work Sans';
@@ -288,8 +293,12 @@ li:hover {
 	top: 10px;
 	right: 10px;
 	cursor: pointer;
+	transition: scale 0.2s ease-out;
 }
-/* Première parie de la modale */
+.modal__cross:hover {
+	scale: 1.2;
+}
+/* Première partie de la modale */
 #modal__pics-section {
 	display: flex;
 	flex-direction: column;
@@ -308,6 +317,7 @@ li:hover {
 #modal__image-container {
 	display: flex;
 	flex-wrap: wrap;
+	margin-top: 20px;
 	gap: 17px;
 	justify-content: flex-start;
 	align-items: flex-start;
@@ -344,7 +354,7 @@ li:hover {
 	object-fit: contain;
 }
 .modal__separator {
-	width: 70%;
+	width: 100%;
 	height: 2px;
 	background: #B3B3B3;
 }
@@ -357,7 +367,8 @@ li:hover {
 	color: white;
 	background-color: #1D6154;
 	width: 180px;
-	height: 35px;
+	padding: 18px 10px 18px 10px;
+	margin : auto ;
 	border-radius: 60px ;
 	cursor: pointer;
 }
@@ -373,13 +384,16 @@ li:hover {
 	width: 600px;
 	left: 600px;
 	top: 0;
-	border: 2px solid blue;
 }
 .modal__arrow-back {
 	position: absolute;
 	scale: 0.8;
 	top: 10px;
 	left: 10px;
+	transition: scale 0.2s ease-out;
+}
+.modal__arrow-back:hover {
+	scale: 1;
 }
 .form-add-work {
 box-sizing: border-box;
@@ -390,26 +404,63 @@ justify-content: space-between;
 align-items: flex-start;
 }
 .form-pic-section {
+	position: relative;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
+	gap: 10px;
+	height: 170px;
 	width: 100%;
 	background: #E8F1F6;
-	margin-top: 30px;
+	margin: 30px 0 20px 0;
+}
+#chosen-pic {
+	position: absolute;
+	height: 100%;
 }
 #choose-pic {
-	visibility: hidden;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	appearance: none;
+	opacity: 0;
 }
 .input-file-label {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	width: 180px;
-	height: 35px;
+	padding: 10px 0;
 	border-radius: 50px;
 	background: #CBD6DC;
-
+	color: #306685;
+	font-weight: 700;
+}
+.form-add-work input, .form-add-work select {
+	appearance: none;
+	outline: none;
+	position: relative;
+	width: 100%;
+	padding: 15px;
+	margin: 10px 0 20px 0;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	box-sizing: border-box;
+	border: none;
+	font-family: 'Work Sans';
+	font-size: 16px;
+}
+.svg-container {
+	position: relative;
+	width: 100%;
+}
+.select-svg {
+	position: absolute;
+	z-index: 5;
+	bottom: 35px;
+	right: 15px;
 }
 
 
@@ -469,6 +520,10 @@ input[type="submit"] {
 }
 input[type="submit"]:hover{
 	background-color: #0E2F28;
+}
+input[type="submit"]:disabled {
+	background: #A7A7A7;
+	cursor: default;
 }
 
 footer nav ul {

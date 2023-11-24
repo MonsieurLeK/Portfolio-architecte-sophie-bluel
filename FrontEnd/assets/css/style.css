@@ -439,6 +439,15 @@ align-items: flex-start;
 	color: #306685;
 	font-weight: 700;
 }
+.input-label-hidden {
+	position: absolute;
+	opacity: 0;
+	z-index: 6;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
 .form-add-work input, .form-add-work select {
 	appearance: none;
 	position: relative;

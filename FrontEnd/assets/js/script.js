@@ -32,6 +32,21 @@ async function getElements() {
        deleteButton.innerHTML = deleteButtonSVG
        deleteButton.classList.add("modal__delete-button")
        deleteButton.id = element.id
+       deleteButton.addEventListener("click", (event) => {
+        fetch(`http://localhost:5678/api/works/${deleteButton.id}`, {
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${userToken}`
+            },
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        deleteElements()
+        setTimeout(() => {
+            getElements()
+        }, 100)
+        event.preventDefault()
+       })
 
        //ici on place les éléments dans leurs containers
        workContainer.appendChild(workFigure)
@@ -97,9 +112,12 @@ getElements()
 
 //Vérification de si l'utilisateur est connecté ou non
 let isUserConnected = localStorage.getItem("connected")
+let userToken = localStorage.getItem("token")
+console.log(userToken)
 console.log(`connected = ${isUserConnected}`)
 if (isUserConnected == "true") {
     let loginButton = document.getElementById("login-button")
+    document.getElementById("filtres").style.display = "none"
     loginButton.innerText = "Logout"
     loginButton.href = "#"
     loginButton.addEventListener("click", () => {
@@ -147,12 +165,13 @@ uploadButton.onchange = () => {
     reader.readAsDataURL(uploadButton.files[0])
     console.log(uploadButton.files[0])
     reader.onload = () => {
-        svgPic.remove()
-        uploadLabel.remove()
-        textPic.remove()
+        svgPic.style.display = "none"
+        uploadLabel.classList.add("input-label-hidden")
+        textPic.style.display = "none"
         chosenPic.setAttribute("src", reader.result)
     }
 }
+
 //Récupérer les infos du formulaire et fetch POST
 const workForm = document.querySelector(".form-add-work")
 let workTitle = document.getElementById("work-title")
@@ -166,4 +185,35 @@ workForm.oninput = () => {
         workSubmitButton.disabled = true
     }
 }
- 
+//envoie d'un nouveau travail à l'API
+function postWork() {
+    const formData = new FormData()
+    formData.append("image", uploadButton.files[0])
+    formData.append("title", workTitle.value)
+    formData.append("category", workCategory.value)
+    console.log(formData)
+    fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${userToken}`,
+        },
+        body: formData
+    })
+    .then(res => {return res.json()})
+    .then(data => console.log(data))
+    .catch(error => console.log("ERROR"))
+}
+//supprimer tous les éléments avant de les recharger
+async function deleteElements() {
+    workContainer.innerHTML = ""
+    modalImages.innerHTML = ""
+}
+
+workForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+    postWork()
+    deleteElements()
+    setTimeout(() => {
+        getElements()
+    }, 100)
+})

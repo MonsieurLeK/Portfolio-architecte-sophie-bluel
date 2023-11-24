@@ -34,6 +34,7 @@ function connectUser(event) {
         //sur le local storages
         if (userToken) {
             localStorage.setItem("connected", "true")
+            localStorage.setItem("token", `${data.token}`)
             document.location.href = "./index.html"
         } else {
             let errorMessage = document.getElementById("error-message")

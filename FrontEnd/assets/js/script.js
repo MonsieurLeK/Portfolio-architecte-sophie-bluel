@@ -122,6 +122,7 @@ if (isUserConnected == "true") {
     loginButton.href = "#"
     loginButton.addEventListener("click", () => {
         localStorage.removeItem("connected")
+        localStorage.removeItem("token")
         location.reload()
     })
     //on fait apparaît le bouton déclencheur de la modale
